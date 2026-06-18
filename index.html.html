@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OpenStroll</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+      color: #202124;
+      background: #f7f7f5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 28px 16px 72px;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.9rem, 6.5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.05;
+    }
+
+    .tagline {
+      margin: 3px 0 0;
+      color: #202124;
+      font-size: clamp(1.05rem, 4vw, 1.35rem);
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .intro {
+      margin: 0 0 24px;
+      color: #5f6368;
+      text-align: center;
+    }
+
+    form {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 36px;
+    }
+
+    label,
+    .field-label {
+      display: grid;
+      gap: 8px;
+      font-weight: 700;
+    }
+
+    textarea {
+      width: 100%;
+      height: 72px;
+      min-height: 72px;
+      resize: none;
+      box-sizing: border-box;
+      padding: 12px;
+      border: 1px solid #c9c9c3;
+      border-radius: 6px;
+      font: inherit;
+      background: #ffffff;
+      color: inherit;
+    }
+
+    textarea:disabled {
+      border-color: #ddddda;
+      background: #eeeeeb;
+      color: #777a7d;
+      cursor: not-allowed;
+    }
+
+    textarea:focus {
+      outline: 3px solid #c8ddff;
+      border-color: #4d86d9;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      accent-color: #1f1f1f;
+    }
+
+    button {
+      justify-self: start;
+      padding: 10px 16px;
+      border: 1px solid #1f1f1f;
+      border-radius: 6px;
+      font: inherit;
+      font-weight: 700;
+      background: #1f1f1f;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    button:hover,
+    button:focus-visible {
+      background: #3a3a3a;
+    }
+
+    button:disabled {
+      border-color: #b7b7b2;
+      background: #d6d6d1;
+      color: #666a6d;
+      cursor: not-allowed;
+    }
+
+    .delete-button {
+      margin-top: 14px;
+      padding: 6px 10px;
+      border-color: #b3261e;
+      background: #ffffff;
+      color: #b3261e;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .delete-button:hover,
+    .delete-button:focus-visible {
+      background: #fce8e6;
+    }
+
+    section,
+    footer {
+      border-top: 1px solid #d8d8d2;
+      padding-top: 24px;
+    }
+
+    section {
+      margin-bottom: 36px;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 1.35rem;
+    }
+
+    .empty {
+      margin: 0;
+      color: #5f6368;
+    }
+
+    .loop-list {
+      display: grid;
+      gap: 16px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .loop-entry {
+      padding: 16px;
+      border: 1px solid #d8d8d2;
+      border-radius: 6px;
+      background: #ffffff;
+    }
+
+    .loop-entry time {
+      display: block;
+      margin-bottom: 12px;
+      color: #5f6368;
+      font-size: 0.9rem;
+    }
+
+    .loop-entry dl {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+    }
+
+    .loop-entry dt {
+      font-weight: 700;
+    }
+
+    .loop-entry dd {
+      margin: 2px 0 0;
+      white-space: pre-wrap;
+    }
+
+    footer p {
+      margin: 0 0 10px;
+      color: #4f5356;
+      font-size: 0.92rem;
+    }
+
+    footer p:last-child {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>OpenStroll</h1>
+      <p class="tagline">Close the Loop</p>
+    </header>
+
+    <p class="intro">An open loop is a thought or question that keeps repeating in your mind.</p>
+
+    <form id="loop-form">
+      <label>
+        What is your open loop?
+        <textarea id="open-loop" name="openLoop" required></textarea>
+      </label>
+
+      <label>
+        What outcome are you secretly hoping for?
+        <textarea id="hoped-outcome" name="hopedOutcome" required></textarea>
+      </label>
+
+      <label>
+        What are you afraid reality will say?
+        <textarea id="reality-fear" name="realityFear" required></textarea>
+      </label>
+
+      <label>
+        What is the smallest meaningful action you can take?
+        <textarea id="meaningful-action" name="meaningfulAction" required></textarea>
+      </label>
+
+      <label class="checkbox-label">
+        <input id="action-taken" name="actionTaken" type="checkbox">
+        Have you taken the action?
+      </label>
+
+      <label>
+        What happened?
+        <textarea id="what-happened" name="whatHappened" required disabled></textarea>
+      </label>
+
+      <label>
+        What did you feel? (optional)
+        <textarea id="what-felt" name="whatFelt" disabled></textarea>
+      </label>
+
+      <button id="close-button" type="submit" disabled>Close the Loop</button>
+    </form>
+
+    <section aria-labelledby="closed-heading">
+      <h2 id="closed-heading">Closed Loops</h2>
+      <p class="empty" id="empty-state">No closed loops yet.</p>
+      <ul class="loop-list" id="loop-list"></ul>
+    </section>
+
+    <footer aria-labelledby="feedback-heading">
+      <h2 id="feedback-heading">Feedback &amp; Privacy</h2>
+      <p>No data is collected or transmitted.</p>
+      <p>We are not Cookie Monsters.</p>
+      <p>All data remains on your device.</p>
+      <p>If you find OpenStroll useful, please share it with someone who may benefit from it.</p>
+      <p>This is an early prototype and we welcome feedback.</p>
+      <p>OpenStroll is a reflection tool and is not a substitute for professional medical, legal, financial or mental health advice.</p>
+      <p>For feedback: <strong><a href="mailto:vikram.fms@gmail.com">vikram.fms@gmail.com</a></strong></p>
+    </footer>
+  </main>
+
+  <script>
+    const storageKey = "openstroll.loops";
+    const form = document.querySelector("#loop-form");
+    const list = document.querySelector("#loop-list");
+    const emptyState = document.querySelector("#empty-state");
+    const actionTaken = document.querySelector("#action-taken");
+    const whatHappened = document.querySelector("#what-happened");
+    const whatFelt = document.querySelector("#what-felt");
+    const closeButton = document.querySelector("#close-button");
+
+    function createId() {
+      if (globalThis.crypto && crypto.randomUUID) {
+        return crypto.randomUUID();
+      }
+
+      return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function loadLoops() {
+      try {
+        const loops = JSON.parse(localStorage.getItem(storageKey)) || [];
+        return loops.map((loop, index) => ({
+          id: loop.id || `${loop.createdAt || "saved"}-${index}`,
+          ...loop
+        }));
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveLoops(loops) {
+      localStorage.setItem(storageKey, JSON.stringify(loops));
+    }
+
+    function hasValue(field) {
+      return field.value.trim().length > 0;
+    }
+
+    function updateActionFields() {
+      const enabled = actionTaken.checked;
+      whatHappened.disabled = !enabled;
+      whatFelt.disabled = !enabled;
+
+      if (!enabled) {
+        whatHappened.value = "";
+        whatFelt.value = "";
+      }
+
+      updateCloseButton();
+    }
+
+    function updateCloseButton() {
+      closeButton.disabled = !actionTaken.checked || !hasValue(whatHappened);
+    }
+
+    function renderLoops() {
+      const loops = loadLoops();
+      list.innerHTML = "";
+      emptyState.hidden = loops.length > 0;
+
+      loops.forEach((loop) => {
+        const item = document.createElement("li");
+        item.className = "loop-entry";
+
+        const created = new Date(loop.closedAt || loop.createdAt);
+        const answers = [
+          ["What is your open loop?", loop.openLoop],
+          ["What outcome are you secretly hoping for?", loop.hopedOutcome],
+          ["What are you afraid reality will say?", loop.realityFear],
+          ["What is the smallest meaningful action you can take?", loop.meaningfulAction],
+          ["Have you taken the action?", loop.actionTaken ? "Yes" : ""],
+          ["What happened?", loop.whatHappened],
+          ["What did you feel? (optional)", loop.whatFelt],
+          ["What is the smallest safe action?", loop.safeAction],
+          ["Park it or act?", loop.parkOrAct],
+          ["What do you see?", loop.whatSee],
+          ["What would reality say?", loop.realitySay],
+          ["Smallest next action", loop.nextAction]
+        ].filter((answer) => answer[1]);
+
+        const timestamp = document.createElement("time");
+        timestamp.dateTime = (loop.closedAt || loop.createdAt);
+        timestamp.textContent = created.toLocaleString();
+        item.appendChild(timestamp);
+
+        const details = document.createElement("dl");
+
+        answers.forEach(([question, answer]) => {
+          const group = document.createElement("div");
+          const term = document.createElement("dt");
+          const description = document.createElement("dd");
+
+          term.textContent = question;
+          description.textContent = answer;
+          group.append(term, description);
+          details.appendChild(group);
+        });
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete-button";
+        deleteButton.type = "button";
+        deleteButton.textContent = "Delete";
+
+        item.append(details, deleteButton);
+
+        deleteButton.addEventListener("click", () => {
+          const remainingLoops = loadLoops().filter((savedLoop) => savedLoop.id !== loop.id);
+          saveLoops(remainingLoops);
+          renderLoops();
+        });
+
+        list.appendChild(item);
+      });
+    }
+
+    actionTaken.addEventListener("change", updateActionFields);
+    whatHappened.addEventListener("input", updateCloseButton);
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      if (!actionTaken.checked || !hasValue(whatHappened)) {
+        updateCloseButton();
+        return;
+      }
+
+      const formData = new FormData(form);
+      const loops = loadLoops();
+      const loop = {
+        id: createId(),
+        openLoop: formData.get("openLoop").trim(),
+        hopedOutcome: formData.get("hopedOutcome").trim(),
+        realityFear: formData.get("realityFear").trim(),
+        meaningfulAction: formData.get("meaningfulAction").trim(),
+        actionTaken: actionTaken.checked,
+        whatHappened: formData.get("whatHappened").trim(),
+        whatFelt: formData.get("whatFelt").trim(),
+        closedAt: new Date().toISOString()
+      };
+
+      loops.unshift(loop);
+      saveLoops(loops);
+      form.reset();
+      updateActionFields();
+      renderLoops();
+      document.querySelector("#open-loop").focus();
+    });
+
+    updateActionFields();
+    renderLoops();
+  </script>
+</body>
+</html>
