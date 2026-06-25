@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -92,6 +92,14 @@
       border-color: #4d86d9;
     }
 
+    .character-counter {
+      justify-self: end;
+      color: #5f6368;
+      font-size: 0.85rem;
+      font-weight: 400;
+      line-height: 1;
+    }
+
     .checkbox-label {
       display: flex;
       align-items: center;
@@ -128,6 +136,22 @@
       background: #d6d6d1;
       color: #666a6d;
       cursor: not-allowed;
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .secondary-button {
+      background: #ffffff;
+      color: #1f1f1f;
+    }
+
+    .secondary-button:hover,
+    .secondary-button:focus-visible {
+      background: #eeeeeb;
     }
 
     .delete-button {
@@ -225,22 +249,26 @@
     <form id="loop-form">
       <label>
         What is your open loop?
-        <textarea id="open-loop" name="openLoop" required></textarea>
+        <textarea id="open-loop" name="openLoop" maxlength="250" required></textarea>
+        <span class="character-counter">0 / 250</span>
       </label>
 
       <label>
         What outcome are you secretly hoping for?
-        <textarea id="hoped-outcome" name="hopedOutcome" required></textarea>
+        <textarea id="hoped-outcome" name="hopedOutcome" maxlength="180" required></textarea>
+        <span class="character-counter">0 / 180</span>
       </label>
 
       <label>
         What are you afraid reality will say?
-        <textarea id="reality-fear" name="realityFear" required></textarea>
+        <textarea id="reality-fear" name="realityFear" maxlength="120" required></textarea>
+        <span class="character-counter">0 / 120</span>
       </label>
 
       <label>
         What is the smallest meaningful action you can take?
-        <textarea id="meaningful-action" name="meaningfulAction" required></textarea>
+        <textarea id="meaningful-action" name="meaningfulAction" maxlength="80" required></textarea>
+        <span class="character-counter">0 / 80</span>
       </label>
 
       <label class="checkbox-label">
@@ -250,15 +278,20 @@
 
       <label>
         What happened?
-        <textarea id="what-happened" name="whatHappened" required disabled></textarea>
+        <textarea id="what-happened" name="whatHappened" maxlength="250" required disabled></textarea>
+        <span class="character-counter">0 / 250</span>
       </label>
 
       <label>
         What did you feel? (optional)
-        <textarea id="what-felt" name="whatFelt" disabled></textarea>
+        <textarea id="what-felt" name="whatFelt" maxlength="120" disabled></textarea>
+        <span class="character-counter">0 / 120</span>
       </label>
 
-      <button id="close-button" type="submit" disabled>Close the Loop</button>
+      <div class="form-actions">
+        <button id="close-button" type="submit" disabled>Close the Loop</button>
+        <button class="secondary-button" id="clear-button" type="button">Clear All</button>
+      </div>
     </form>
 
     <section aria-labelledby="closed-heading">
@@ -288,6 +321,7 @@
     const whatHappened = document.querySelector("#what-happened");
     const whatFelt = document.querySelector("#what-felt");
     const closeButton = document.querySelector("#close-button");
+    const clearButton = document.querySelector("#clear-button");
 
     function createId() {
       if (globalThis.crypto && crypto.randomUUID) {
@@ -327,11 +361,26 @@
         whatFelt.value = "";
       }
 
+      updateAllCharacterCounters();
       updateCloseButton();
     }
 
     function updateCloseButton() {
       closeButton.disabled = !actionTaken.checked || !hasValue(whatHappened);
+    }
+
+    function updateCharacterCounter(field) {
+      const counter = field.nextElementSibling;
+
+      if (!counter || !counter.classList.contains("character-counter")) {
+        return;
+      }
+
+      counter.textContent = `${field.value.length} / ${field.maxLength}`;
+    }
+
+    function updateAllCharacterCounters() {
+      form.querySelectorAll("textarea").forEach((field) => updateCharacterCounter(field));
     }
 
     function renderLoops() {
@@ -396,6 +445,22 @@
 
     actionTaken.addEventListener("change", updateActionFields);
     whatHappened.addEventListener("input", updateCloseButton);
+    form.querySelectorAll("textarea").forEach((field) => {
+      field.addEventListener("input", () => updateCharacterCounter(field));
+    });
+    updateAllCharacterCounters();
+
+    clearButton.addEventListener("click", () => {
+      const confirmed = confirm("Clear all current fields? This will not delete closed loops.");
+
+      if (!confirmed) {
+        return;
+      }
+
+      form.reset();
+      updateActionFields();
+      document.querySelector("#open-loop").focus();
+    });
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();
